@@ -36,12 +36,8 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        String creds=readFromFile(Login.this,"login");
         mAuth = FirebaseAuth.getInstance();
-        if(creds!=null && creds.length()>6){
-            login(creds.split(":")[0],creds.split(":")[1]);
-            start();
-        }else if(mAuth.getCurrentUser()!=null){
+        if(mAuth.getCurrentUser()!=null){
             start();
         }
     }
