@@ -23,6 +23,7 @@ public class Rook extends Piece{
     //methods
 
     public void calculateMoves(Board b){
+        this.possibleMoves.clear();
 
         int[][] dir={{1,0},{0,1},{-1,0},{0,-1}};
         //down right up left

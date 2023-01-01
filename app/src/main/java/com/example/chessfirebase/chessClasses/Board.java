@@ -4,11 +4,11 @@ package com.example.chessfirebase.chessClasses;
 
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.Log;
 
 import com.example.chessfirebase.socketPlayer;
+
+import java.util.List;
 
 public class Board{//add the tap listener later in android studio
     //variables
@@ -16,12 +16,14 @@ public class Board{//add the tap listener later in android studio
     private King wk;
     private King bk;
     public Piece remove;
-    public boolean isFirstClick;
+    public boolean isFirstClick=true;
     int[] from;
     private socketPlayer player;
+    private Piece currSelectedPiece;
 
     public Board(boolean isWhite,socketPlayer p){
         this.player=p;
+        from = new int[2];
         board=new BoardCell[8][8];
         for(int i=0;i<board.length;i++){
             for(int j=0;j<board.length;j++){
@@ -148,27 +150,28 @@ public class Board{//add the tap listener later in android studio
         }
     }
 
-    public void psuedoClickListener(float rawX,float rawY){
-        int row=Math.round(rawY%BoardCell.size);
-        int col=Math.round(rawX%BoardCell.size);
-        Piece curr=this.getCell(row, col).getPiece();
+    public void psuedoClickListener(int row,int col){
+//        if(!player.ourTurn)return; TODO:uncomment for release
         if(isFirstClick){
-            if(curr!=null && curr.isWhite==player.isWhite){
-                from=curr.getRawPos();
+            currSelectedPiece=board[row][col].getPiece();
+            if(currSelectedPiece!=null && currSelectedPiece.isWhite==player.isWhite){
+                from=currSelectedPiece.getRawPos();
                 isFirstClick=!isFirstClick;
-                curr.drawValidMoves();
+                currSelectedPiece.drawValidMoves();
             }
-        }else{
-            row=Math.round(rawY%BoardCell.size);
-            col=Math.round(rawX%BoardCell.size);
-            for(int[] mov: curr.getMoves()){
+        }else if(currSelectedPiece!=null){
+            List<int[]> lst=currSelectedPiece.getMoves();
+            isFirstClick=!isFirstClick;
+            for(int[] mov: lst){
                 if(mov[0]==row && mov[1]==col){
-                    player.move(from, new int[]{row,col});
-                    isFirstClick=!isFirstClick;
-                    this.move(from , mov);
+                    player.toggleOurTurn();
+                    this.playerMove(from , mov);
                     player.ch.move=from[0]+","+from[1]+" "+mov[0]+","+mov[1];
+                    player.calculateMoves();
+                    break;
                 }
             }
+            currSelectedPiece=null;
         }
     }
 
@@ -180,16 +183,12 @@ public class Board{//add the tap listener later in android studio
 
     public void playerMove(int[] from,int[] to){
         Piece p=this.getCell(to[0], to[1]).getPiece();
-        if(p!=null){
-            player.remove(p);
-            this.board[to[0]][to[1]].setPiece(this.board[from[0]][from[1]].getPiece());
-            this.board[from[0]][from[1]].setPiece(null);
-            this.board[to[0]][to[1]].getPiece().move(to[0],to[1]);
-        }else{
-            this.board[to[0]][to[1]].setPiece(this.board[from[0]][from[1]].getPiece());
-            this.board[from[0]][from[1]].setPiece(null);
-            this.board[to[0]][to[1]].getPiece().move(to[0],to[1]);
-        }
+        if(p!=null && p.isWhite!=player.isWhite) player.remove(p);
+
+        this.board[to[0]][to[1]].setPiece(this.board[from[0]][from[1]].getPiece());
+        this.board[from[0]][from[1]].setPiece(null);
+        this.board[to[0]][to[1]].getPiece().move(to[0],to[1]);
+        Log.d("NEWSQUARE", "piece "+(board[to[0]][to[1]].getPiece()==null));
     }
 
     public void draw(Canvas canvas){

@@ -26,6 +26,7 @@ public class Pawn extends Piece{
 
     //methods:
     public void calculateMoves(Board b){
+        this.possibleMoves.clear();
         //change to check the moves better - we dont have a check checker
         if (this.row-1>=0 && b.getCell(this.row-1,this.col).getPiece()==null){
             if(isFirstMove && this.row-2>=0 && b.getCell(this.row-2,this.col).getPiece()==null){
@@ -34,12 +35,9 @@ public class Pawn extends Piece{
             isFirstMove = false;
             super.possibleMoves.add(new int[] {this.row-1,this.col});
         }
-        if(row-1>=0 && col+1<8 && b.getCell(row-1, col+1).getPiece()!=null)
-            super.possibleMoves.add(new int[] {row-1,col+1});
+        if(row-1>=0 && col+1<8 && b.getCell(row-1, col+1).getPiece()!=null)super.possibleMoves.add(new int[] {row-1,col+1});
 
-
-        if(row-1>=0 && col-1>=0 && b.getCell(row-1, col-1).getPiece()!=null)
-            super.possibleMoves.add(new int[] {row-1,col-1});
+        if(row-1>=0 && col-1>=0 && b.getCell(row-1, col-1).getPiece()!=null)super.possibleMoves.add(new int[] {row-1,col-1});
 
         validateMoves(b);
     }

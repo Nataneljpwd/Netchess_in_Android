@@ -15,6 +15,7 @@ public class Queen extends Piece{
     }
     //TODO: implement movement.
     public void calculateMoves(Board b){
+        this.possibleMoves.clear();
         int[][] dir={{-1,-1},{-1,1},{1,-1},{-1,-1},{1,0},{0,1},{-1,0},{0,-1}};
         for(int[] d:dir){
             for(int r=this.row,c=this.col;r>=0 && c>=0 && r<8 && c<8;r+=d[0],c+=d[1]){

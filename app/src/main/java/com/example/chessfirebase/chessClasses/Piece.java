@@ -66,19 +66,24 @@ public abstract class Piece{
         //checking for pinned pieces
         List<int[]> moves=this.possibleMoves;
         List<int[]> remove=new ArrayList<>();
-        int[] currPos;
+        int[] currPos=new int[]{this.row,this.col};
+        Log.i("posOfPiece",currPos[0]+", "+currPos[1]);
         //check what moves to remove:
         for(int i=0;i<moves.size();i++){
-            //move the piece without drawing
+            //move the piece
             int[] mov=moves.get(i);
-            currPos=this.getRawPos();
             Piece p=b.getCell(mov[0], mov[1]).getPiece();
+            //maybe add an edge case of same colored pieces but probably handled by cacl moves
             b.move(currPos, mov);
             if(b.isCheck(this.isWhite)){
                 remove.add(mov);
             }
             //move the piece back
-            b.move(mov,currPos);
+            if(mov[0]==currPos[0] && mov[1]==currPos[1]){
+                Log.d("MOVE","SAME_MOVE_ERROR");
+                Log.d("THE MOVE",mov[0]+","+mov[1]);
+            }
+            b.move(mov,currPos);//the problematic func
             if(p!=null){
                 b.getCell(mov[0], mov[1]).setPiece(p);
             }

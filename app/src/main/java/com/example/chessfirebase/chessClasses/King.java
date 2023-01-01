@@ -18,6 +18,7 @@ public class King extends Piece {
     }
 
     public void calculateMoves(Board b){
+        this.possibleMoves.clear();
         int[][] dir={{-1,-1},{-1,1},{1,-1},{1,1},{1,0},{0,1},{-1,0},{0,-1}};
         for(int[] d:dir){
             if(this.row+d[0]<8 && this.row+d[0]>=0 && this.col+d[1]<8 && this.col+d[1]>=0 && (b.getCell(this.row+d[0],this.col+d[1]).getPiece()==null || b.getCell(this.row+d[0],this.col+d[1]).getPiece().getIsWhite()!=this.isWhite)){

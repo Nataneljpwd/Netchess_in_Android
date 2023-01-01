@@ -82,16 +82,9 @@ public class socketPlayer implements Runnable{
         }
     }
 
-    public void move(int[] curr,int[] to){//add a listener that will listen where clicked after a piece was selected to get the x and y
-        Piece p=board.getCell(curr[0], curr[1]).getPiece();
-        for(int[] mov:p.possibleMoves){
-            if(mov[0]==to[0] && mov[1]==to[1]){
-                ourTurn=!ourTurn;
-                this.ch.move=curr[0]+","+curr[1]+" "+to[0]+","+to[1];
-            }
-        }
+    public void toggleOurTurn(){
+        this.ourTurn=!this.ourTurn;
     }
-
     //after we recieve the move:
     public int situationCheck(){
         //return 0 if nothing, 1 if check 2 if mate 3 if draw.

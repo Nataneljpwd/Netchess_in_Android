@@ -23,6 +23,7 @@ public class Bishop extends Piece{
     //calculateing the moves using bfs
 
     public void calculateMoves(Board b){
+        this.possibleMoves.clear();
         int[][] dir={{-1,-1},{-1,1},{1,-1},{-1,-1}};
         //top left, top right, bottom left, bottom right
 

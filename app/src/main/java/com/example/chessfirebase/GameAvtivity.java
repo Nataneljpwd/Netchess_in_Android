@@ -60,13 +60,6 @@ public class GameAvtivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             cgv.start(p.getBoard());
-            cgv.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    p.getBoard().psuedoClickListener(event.getX(),event.getY());
-                    return false;
-                }
-            });
         }
 
 
