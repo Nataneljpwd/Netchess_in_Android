@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "786174912789",
+    "firebase_url": "https://chess-firebase-711c4-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "chess-firebase-711c4",
     "storage_bucket": "chess-firebase-711c4.appspot.com"
   },

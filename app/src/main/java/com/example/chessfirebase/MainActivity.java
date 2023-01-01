@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvName;
     private TextView tvElo;
     private FirebaseAuth mAuth;
-    private Button btRooms;
+    private Button btRooms,btQPair;
     private FirebaseDatabase database;
     private DatabaseReference player;
     @Override
@@ -43,23 +45,32 @@ public class MainActivity extends AppCompatActivity {
         tvName=findViewById(R.id.tvName);
         tvElo=findViewById(R.id.tvElo);
         btRooms=findViewById(R.id.btBrowseRooms);
+        btQPair=findViewById(R.id.btQuickPair);
         String name=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         tvName.setText(name);
         tvElo.setText(sharedPreferences.getInt("Elo",800)+"");
         mAuth = FirebaseAuth.getInstance();
         database=FirebaseDatabase.getInstance();
-        player= database.getReference("players/"+name);
-        player.setValue(name+":"+sharedPreferences.getInt("Elo",800));//set the value by default to the name and rating so that we read
+        player= database.getReference("players/"+mAuth.getUid()+":"+name);
+        player.setValue(sharedPreferences.getInt("Elo",800));//set the value by default to the name and rating so that we read
         //it at the start and know what to display
-        btRooms.setOnClickListener(new View.OnClickListener() {
+        btRooms.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                btRooms.setEnabled(false);
                 startActivity(new Intent(MainActivity.this,RoomBrowse.class));
-                readFromDB();
                 MainActivity.this.finish();
             }
         });
-        //readFromDB();
+        btQPair.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent u=new Intent(MainActivity.this,GameAvtivity.class);
+                u.putExtra("Firebase",false);
+                startActivity(u);
+                MainActivity.this.finish();
+            }
+        });
     }
     private String readFromFile(Context context, String fileName) {
 
@@ -107,11 +118,12 @@ public class MainActivity extends AppCompatActivity {
         this.finish();
     }
 
-    public void readFromDB(){
+    public void checkForFailure(){
         player.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {//occurs when another player joins the room
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //start an activity to roomBrowse
+
                 startActivity(new Intent(MainActivity.this,RoomBrowse.class));
                 MainActivity.this.finish();
             }
@@ -120,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 //error
                 //TODO: try and handle the error (think about how to handle)
+                btRooms.setEnabled(true);
+                Toast.makeText(MainActivity.this,"Error creating player",Toast.LENGTH_LONG).show();
             }
         });
     }
