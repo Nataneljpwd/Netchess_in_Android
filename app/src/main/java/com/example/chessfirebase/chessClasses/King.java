@@ -11,6 +11,8 @@ import com.example.chessfirebase.customGameView;
 import java.util.*;
 
 public class King extends Piece {
+
+    int[][] dir={{-1,-1},{-1,1},{1,-1},{1,1},{1,0},{0,1},{-1,0},{0,-1}};
     public King(int row,int col,boolean isWhite){
         super(row, col, isWhite);
         this.img = BitmapFactory.decodeResource(customGameView.context.getResources(),isWhite ? R.drawable.white_king : R.drawable.black_king);
@@ -19,7 +21,6 @@ public class King extends Piece {
 
     public void calculateMoves(Board b){
         this.possibleMoves.clear();
-        int[][] dir={{-1,-1},{-1,1},{1,-1},{1,1},{1,0},{0,1},{-1,0},{0,-1}};
         for(int[] d:dir){
             if(this.row+d[0]<8 && this.row+d[0]>=0 && this.col+d[1]<8 && this.col+d[1]>=0 && (b.getCell(this.row+d[0],this.col+d[1]).getPiece()==null || b.getCell(this.row+d[0],this.col+d[1]).getPiece().getIsWhite()!=this.isWhite)){
                 super.possibleMoves.add(new int[] {this.row+d[0], this.col+d[1]});
@@ -29,16 +30,11 @@ public class King extends Piece {
     }
 
     public boolean isCheck(Board b){
-        //no need for that!!!
         //run BFS to check if its check+ 8 moves for Knight and 2 for pawns.
-        //checking for top checks
-        //a=0 if vert/horiz , a=1 if diag a=2 if horse, a=3 if pawn
-        //a[0] is row a[1] is col a[2] is kind (diag/horiz/vert/horse/pawn)
-        int[][] dir={{-1,-1},{-1,1},{1,-1},{-1,-1},{1,0},{0,1},{-1,0},{0,-1}};
         //first diagonal then vertical
         Piece p;
-        for(int i=0;i<dir.length;i++) {
-            for(int r=this.row,c=this.col;r<8 && r>=0 && c<8 && c>=0;r+=dir[i][0],c+=dir[i][1]){
+        for(int i=1;i<dir.length;i++) {
+            for(int r=this.row+dir[0][0],c=this.col+dir[0][1];r<8 && r>=0 && c<8 && c>=0;r+=dir[i][0],c+=dir[i][1]){
                 if((p=b.getCell(r,c).getPiece())!=null){
                     if(p.isWhite!=this.isWhite){//check if not our color
                         if(i<=3){

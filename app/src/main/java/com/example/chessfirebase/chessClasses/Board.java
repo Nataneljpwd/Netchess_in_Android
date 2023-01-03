@@ -2,15 +2,13 @@ package com.example.chessfirebase.chessClasses;
 
 //---------------imports-------------------
 
-
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.example.chessfirebase.socketPlayer;
 
 import java.util.List;
 
-public class Board{//add the tap listener later in android studio
+public class Board{
     //variables
     private BoardCell[][] board;
     private King wk;
@@ -80,12 +78,14 @@ public class Board{//add the tap listener later in android studio
                 }
                 if(i==1){
                     //add not our color pawn
-                    board[i][j].setPiece(new Pawn(i, j, !isWhite));
+                    Pawn pawn=new Pawn(i,j, !isWhite);
+                    board[i][j].setPiece(pawn);
                 }
                 if(i==6){
                     //add our colored pawn
-                    board[i][j].setPiece(new Pawn(i, j, isWhite));
-                    player.pieces.add(board[i][j].getPiece());
+                    Pawn pawn=new Pawn(i,j, isWhite);
+                    board[i][j].setPiece(pawn);
+                    player.pieces.add(pawn);
                 }
                 if(i==7){
                     if(j==0 || j==7){
@@ -103,12 +103,6 @@ public class Board{//add the tap listener later in android studio
                     if(j==2 || j==5){
                         //add our colored bishop
                         board[i][j].setPiece(new Bishop(i, j, isWhite));
-                        player.pieces.add(board[i][j].getPiece());
-                    }
-
-                    if(j==3){
-                        //add our colored queen
-                        board[i][j].setPiece(new Queen(i, j, isWhite));
                         player.pieces.add(board[i][j].getPiece());
                     }
                     if(isWhite){
@@ -151,13 +145,13 @@ public class Board{//add the tap listener later in android studio
     }
 
     public void psuedoClickListener(int row,int col){
-//        if(!player.ourTurn)return; TODO:uncomment for release
+//        if(!player.ourTurn)return;
         if(isFirstClick){
             currSelectedPiece=board[row][col].getPiece();
             if(currSelectedPiece!=null && currSelectedPiece.isWhite==player.isWhite){
                 from=currSelectedPiece.getRawPos();
                 isFirstClick=!isFirstClick;
-                currSelectedPiece.drawValidMoves();
+                currSelectedPiece.isSelected=true;
             }
         }else if(currSelectedPiece!=null){
             List<int[]> lst=currSelectedPiece.getMoves();
@@ -167,10 +161,12 @@ public class Board{//add the tap listener later in android studio
                     player.toggleOurTurn();
                     this.playerMove(from , mov);
                     player.ch.move=from[0]+","+from[1]+" "+mov[0]+","+mov[1];
+                    if(currSelectedPiece instanceof Pawn)((Pawn) currSelectedPiece).isFirstMove=false;
                     player.calculateMoves();
                     break;
                 }
             }
+            currSelectedPiece.isSelected=false;
             currSelectedPiece=null;
         }
     }
@@ -188,14 +184,12 @@ public class Board{//add the tap listener later in android studio
         this.board[to[0]][to[1]].setPiece(this.board[from[0]][from[1]].getPiece());
         this.board[from[0]][from[1]].setPiece(null);
         this.board[to[0]][to[1]].getPiece().move(to[0],to[1]);
-        Log.d("NEWSQUARE", "piece "+(board[to[0]][to[1]].getPiece()==null));
     }
 
     public void draw(Canvas canvas){
         for(int i=0;i<8;i++){
             for(int j=0;j<8;j++){
                 board[i][j].draw(canvas);
-//                Log.d("X<Y",j*BoardCell.size+","+i*BoardCell.size+", "+board[i][j].isWhite);
             }
         }
     }
@@ -224,13 +218,10 @@ public class Board{//add the tap listener later in android studio
     }
 
     public boolean isCheck(boolean isWhite){//check if it is check, here we input the color of the player
-        //check kings implementation of ischeck to see the dir
         if(isWhite){
             return wk.isCheck(this);
         }else{
             return bk.isCheck(this);
         }
     }
-
-
 }

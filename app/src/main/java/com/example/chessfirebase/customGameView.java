@@ -41,8 +41,6 @@ public class customGameView extends SurfaceView implements Runnable {
     public void boardMove(float x, float y){
         int row=(int)Math.floor(y/BoardCell.size);
         int col=(int)Math.floor(x/BoardCell.size);
-        Log.d("Click at :",x+", "+y+", row:"+row+", col:"+col);
-        Log.i("PIECE:","the piece in the current cell:" + (this.b.getCell(row,col).getPiece()==null));
         this.b.psuedoClickListener(row,col);
     }
     public void drawBoard(){
@@ -59,7 +57,7 @@ public class customGameView extends SurfaceView implements Runnable {
         while (true){
             drawBoard();
             try {
-            Thread.sleep(1000/30);
+            Thread.sleep(1000/25);
             } catch (InterruptedException e) { e.printStackTrace();}
           }
     }

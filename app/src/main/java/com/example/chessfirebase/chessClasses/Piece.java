@@ -4,6 +4,8 @@ package com.example.chessfirebase.chessClasses;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 
 import java.util.*;
@@ -18,7 +20,6 @@ public abstract class Piece{
     public final boolean isWhite;
     public List<int []> possibleMoves;
     public boolean isSelected;//if piece is tapped we set it to true and calc moves and display validated moves
-    //if 1 piece is selected change all other are to not selected
 
     //------------------------GUI handling--------------------------------
     public static float size;
@@ -65,9 +66,9 @@ public abstract class Piece{
     public void validateMoves(Board b){
         //checking for pinned pieces
         List<int[]> moves=this.possibleMoves;
+//        this.isSelected=false;
         List<int[]> remove=new ArrayList<>();
         int[] currPos=new int[]{this.row,this.col};
-        Log.i("posOfPiece",currPos[0]+", "+currPos[1]);
         //check what moves to remove:
         for(int i=0;i<moves.size();i++){
             //move the piece
@@ -79,11 +80,7 @@ public abstract class Piece{
                 remove.add(mov);
             }
             //move the piece back
-            if(mov[0]==currPos[0] && mov[1]==currPos[1]){
-                Log.d("MOVE","SAME_MOVE_ERROR");
-                Log.d("THE MOVE",mov[0]+","+mov[1]);
-            }
-            b.move(mov,currPos);//the problematic func
+            b.move(mov,currPos);
             if(p!=null){
                 b.getCell(mov[0], mov[1]).setPiece(p);
             }
@@ -102,21 +99,27 @@ public abstract class Piece{
 
     public void draw(Canvas canvas){
         float[] pos=getPos();
-//        Log.i("POSITION OF "+this.row+","+this.col,""+pos[0]+", "+pos[1]);
         canvas.drawBitmap(this.img,pos[0],pos[1],null);
+        if(isSelected)drawValidMoves(canvas);
     }
     public abstract char toChar();
 
-    public void drawValidMoves(){
+    public void drawValidMoves(Canvas canvas){
         //foreach loop of moves, draw circle with low opacity
+        Paint paint=new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        //set paint alpha to be mostly transparent
+        paint.setAlpha(85);
+        float circleSize = 0.75f*size;
+        for(int[] mov:possibleMoves){
+            //draw the gray circle
+            canvas.drawCircle(mov[1]*size+0.5f*size,mov[0]*size+0.5f*size,circleSize/2,paint);
+        }
     }
     //in the board class add a listener to all cells in the board that sends move events
     public void move(int row,int col){
         this.row=row;
         this.col=col;
     }
-
-
-
-
 }

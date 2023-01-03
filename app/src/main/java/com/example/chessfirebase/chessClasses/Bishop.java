@@ -24,7 +24,7 @@ public class Bishop extends Piece{
 
     public void calculateMoves(Board b){
         this.possibleMoves.clear();
-        int[][] dir={{-1,-1},{-1,1},{1,-1},{-1,-1}};
+        int[][] dir={{-1,-1},{-1,1},{1,-1},{1,1}};
         //top left, top right, bottom left, bottom right
 
         for(int i=0;i<dir.length;i++){
