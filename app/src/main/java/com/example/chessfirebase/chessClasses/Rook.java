@@ -13,6 +13,7 @@ import java.util.*;
 
 public class Rook extends Piece{
 
+    public boolean isFirstMove=true;
     public Rook(int row, int col, boolean isWhite) {
         super(row, col, isWhite);
 

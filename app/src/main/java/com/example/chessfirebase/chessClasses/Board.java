@@ -112,26 +112,16 @@ public class Board{
                             player.pieces.add(board[i][j].getPiece());
                         }
                         if(j==4){
-                            if(!isWhite){
-                                bk=new King(i, j, isWhite);
-                                board[i][j].setPiece(bk);
-                            }
-                            else{
-                                wk=new King(i, j, isWhite);
-                                board[i][j].setPiece(wk);
-                            }
+                            wk=new King(i, j, isWhite);
+                            wk.setBoard(this);
+                            board[i][j].setPiece(wk);
                             player.pieces.add(board[i][j].getPiece());
                         }
                     }else{
                         if(j==3){
-                            if(!isWhite){
-                                bk=new King(i, j, isWhite);
-                                board[i][j].setPiece(bk);
-                            }
-                            else{
-                                wk=new King(i, j, isWhite);
-                                board[i][j].setPiece(wk);
-                            }
+                            bk=new King(i, j, isWhite);
+                            bk.setBoard(this);
+                            board[i][j].setPiece(bk);
                             player.pieces.add(board[i][j].getPiece());
                         }
                         if(j==4){
@@ -144,7 +134,7 @@ public class Board{
         }
     }
 
-    public void psuedoClickListener(int row,int col){
+    public void psuedoClickListener(int row,int col){//TODO: chancge the calculate moves to happen after we recieve the oponent move and make it in the player calss
 //        if(!player.ourTurn)return;
         if(isFirstClick){
             currSelectedPiece=board[row][col].getPiece();
@@ -162,6 +152,8 @@ public class Board{
                     this.playerMove(from , mov);
                     player.ch.move=from[0]+","+from[1]+" "+mov[0]+","+mov[1];
                     if(currSelectedPiece instanceof Pawn)((Pawn) currSelectedPiece).isFirstMove=false;
+                    if(currSelectedPiece instanceof King)((King) currSelectedPiece).isFirstMove=false;
+                    if(currSelectedPiece instanceof Rook)((Rook) currSelectedPiece).isFirstMove=false;
                     player.calculateMoves();
                     break;
                 }

@@ -20,6 +20,7 @@ public abstract class Piece{
     public final boolean isWhite;
     public List<int []> possibleMoves;
     public boolean isSelected;//if piece is tapped we set it to true and calc moves and display validated moves
+    protected boolean isMoveCheck=false;
 
     //------------------------GUI handling--------------------------------
     public static float size;
@@ -65,6 +66,7 @@ public abstract class Piece{
 
     public void validateMoves(Board b){
         //checking for pinned pieces
+        isMoveCheck=true;
         List<int[]> moves=this.possibleMoves;
 //        this.isSelected=false;
         List<int[]> remove=new ArrayList<>();
@@ -93,6 +95,7 @@ public abstract class Piece{
         }
 
         this.setMoves(moves);
+        isMoveCheck=false;
     }
 
     public abstract void calculateMoves(Board b);
