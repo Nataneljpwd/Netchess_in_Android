@@ -16,8 +16,6 @@ public class Pawn extends Piece{
     //variables
     public boolean isFirstMove;
 
-
-
     public Pawn(int row, int col, boolean isWhite) {
         super(row, col, isWhite);
         this.img = BitmapFactory.decodeResource(customGameView.context.getResources(), isWhite ? R.drawable.white_pawn : R.drawable.black_pawn);
@@ -38,12 +36,29 @@ public class Pawn extends Piece{
 
         if(row-1>=0 && col-1>=0 && b.getCell(row-1, col-1).getPiece()!=null && b.getCell(row-1, col-1).getPiece().isWhite!=this.isWhite)super.possibleMoves.add(new int[] {row-1,col-1});
 
+        //check for unPeasant move
+
+//        if(this.row==3){
+//            Piece p=b.getCell(this.row, this.col-1).getPiece() == null ? b.getCell(this.row, this.col+1).getPiece() : b.getCell(this.row, this.col-1).getPiece();
+//            if(p!=null && p instanceof Pawn && p.isWhite!=this.isWhite){
+//                int[] prevPosOfPawn=((Pawn) p).prevPos;
+//                if(prevPosOfPawn[0]==1){//if it was the first move
+//
+//                }
+//            }
+//        }
+
         validateMoves(b);
     }
 
     public List<int[]> getMoves(Board b) {
         calculateMoves(b);
         return this.possibleMoves;
+    }
+
+    @Override
+    public void move(int row, int col) {
+        super.move(row, col);
     }
 
     @Override

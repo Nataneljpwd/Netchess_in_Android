@@ -71,7 +71,7 @@ public class King extends Piece {
         boolean[] res=new boolean[]{true,true};
         //first the castle short
         Piece p=b.getCell(this.row,7).getPiece();
-        if(p!=null && p instanceof Rook && ((Rook)p).isFirstMove){
+        if(p!=null && p instanceof Rook && ((Rook)p).isFirstMove && this.isWhite==p.isWhite){
             for(int i=this.col+1;i<p.getCol();i++){
                 if(b.getCell(this.row,i).getPiece()!=null){
                     res[0]=false;
@@ -81,7 +81,7 @@ public class King extends Piece {
         }
         //castle long
         p=b.getCell(this.row,0).getPiece();
-        if(p!=null && p instanceof Rook && ((Rook) p).isFirstMove){
+        if(p!=null && p instanceof Rook && ((Rook) p).isFirstMove && this.isWhite==p.isWhite){
             for(int i=this.col-1;i>p.getCol();i--){
                 if(b.getCell(this.row,i).getPiece()!=null){
                     res[1]=false;

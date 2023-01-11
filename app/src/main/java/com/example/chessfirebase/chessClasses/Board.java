@@ -184,6 +184,13 @@ public class Board{
                 board[i][j].draw(canvas);
             }
         }
+        drawValidMoves(canvas);
+    }
+
+    public void drawValidMoves(Canvas canvas){
+        for(Piece p: player.pieces){
+            if(p.isSelected)p.drawValidMoves(canvas);
+        }
     }
 
     public void printBoard(){

@@ -22,6 +22,7 @@ public abstract class Piece{
     public boolean isSelected;//if piece is tapped we set it to true and calc moves and display validated moves
     protected boolean isMoveCheck=false;
 
+
     //------------------------GUI handling--------------------------------
     public static float size;
     public Bitmap img;
@@ -103,7 +104,6 @@ public abstract class Piece{
     public void draw(Canvas canvas){
         float[] pos=getPos();
         canvas.drawBitmap(this.img,pos[0],pos[1],null);
-        if(isSelected)drawValidMoves(canvas);
     }
     public abstract char toChar();
 
@@ -114,10 +114,17 @@ public abstract class Piece{
         paint.setColor(Color.BLACK);
         //set paint alpha to be mostly transparent
         paint.setAlpha(85);
-        float circleSize = 0.75f*size;
+        float circleSize = 0.5f*size;
+        int c=0;
         for(int[] mov:possibleMoves){
             //draw the gray circle
             canvas.drawCircle(mov[1]*size+0.5f*size,mov[0]*size+0.5f*size,circleSize/2,paint);
+            c++;
+        }
+        try{
+            Thread.sleep(10);
+        }catch(Exception e){
+
         }
     }
     //in the board class add a listener to all cells in the board that sends move events
